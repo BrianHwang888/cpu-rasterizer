@@ -1,6 +1,5 @@
 #pragma once
 
-#include <algorithm>
 #include <cstdint>
 
 namespace rasterizer {
@@ -15,6 +14,14 @@ namespace rasterizer {
 	struct vector4f {
 		float x, y, z, w;
 	};
+
+	template <typename T> max(T a, T b) {
+		return (a > b) ? a : b;
+	}
+
+	template <typename T> min(T a, T b) {
+		return (a < b) ? a : b;
+	}
 
 	inline color4ub to_color4ub(vector4f const& c) {
 		color4ub result;

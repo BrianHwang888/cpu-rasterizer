@@ -6,6 +6,7 @@
 int main() {
 	SDL_Init(SDL_INIT_VIDEO);
 
+	//window setup
 	int width = 800;
 	int height = 600;
 
@@ -21,8 +22,11 @@ int main() {
 	
 	auto last_frame_start = std::chrono::high_resolution_clock::now();
 
+	//draw loop
 	bool running = true;
 	while(running) {
+		
+		//capture window event
 		for(SDL_Event event; SDL_PollEvent(&event);) switch (event.type) {
 		case SDL_WINDOWEVENT:
 			switch (event.window.event) {
@@ -64,6 +68,7 @@ int main() {
 
 		std::cout << dt << std::endl;
 
+		//setur color buffer
 		rasterizer::image_view color_buffer {
 			.pixels = (rasterizer::color4ub*)draw_surface->pixels,
 			.width = (std::uint32_t)width,
@@ -72,12 +77,14 @@ int main() {
 
 		rasterizer::clear(color_buffer, {0.8f, 0.9f, 1.0f, 1.0f});
 
+		//triangle setup
 		rasterizer::vector3f vertices[] = {
 			{100.0f, 100.0f, 0.0f},
 			{200.0f, 100.0f, 0.0f},
 			{100.0f, 200.0f, 0.0f},
 		};
 
+		//draw single triangle
 		rasterizer::draw(color_buffer, rasterizer::draw_command {
 				.mesh = {
 					.positions = vertices,
