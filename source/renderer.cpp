@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cmath>
 #include "rasterizer/renderer.hpp"
 
 namespace rasterizer {
@@ -17,9 +18,19 @@ namespace rasterizer {
 			auto v1 = as_point(command.mesh.positions[vertex_index + 1]);
 			auto v2 = as_point(command.mesh.positions[vertex_index + 2]);
 			
+			float det012 = det2D(v1 - v0, v2 - v0);
+			
+			//check if counter clockwise on screen
+			bool const ccw = det012 < 0.0f;
+
+			if(ccw) {
+				std::swap(v1, v2);
+				det012 = -det012;
+			}
+
 			std::int32_t x_min = std::min({std::floor(v0.x), std::floor(v1.x), std::floor(v2.x)});
-			std::int32_t x_min = std::min({std::floor(v0.x), std::floor(v1.x), std::floor(v2.x)});
-			std::int32_t y_max = std::max({std::floor(v0.y), std::floor(v1.y), std::floor(v2.y)});
+			std::int32_t x_max = std::max({std::floor(v0.x), std::floor(v1.x), std::floor(v2.x)});
+			std::int32_t y_min = std::min({std::floor(v0.y), std::floor(v1.y), std::floor(v2.y)});
 			std::int32_t y_max = std::max({std::floor(v0.y), std::floor(v1.y), std::floor(v2.y)});
 
 			x_min = std::max<std::int32_t>(0, x_min);
