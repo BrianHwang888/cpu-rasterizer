@@ -7,8 +7,8 @@ int main() {
 	SDL_Init(SDL_INIT_VIDEO);
 
 	//window setup
-	int width = 800;
-	int height = 600;
+	int width = 1000;
+	int height = 800;
 
 	SDL_Surface* draw_surface = nullptr;
 	SDL_Window* window = SDL_CreateWindow("Tiny Rasterizer",
@@ -77,23 +77,26 @@ int main() {
 
 		rasterizer::clear(color_buffer, {0.8f, 0.9f, 1.0f, 1.0f});
 
-		//triangle setup
-		rasterizer::vector3f vertices[] = {
-			{100.0f, 100.0f, 0.0f},
-			{100.0f, 200.0f, 0.0f},
-			{200.0f, 100.0f, 0.0f},
+		rasterizer::vector3f positions[] = {
+			{0.0f, 0.0f, 0.0f},
+			{50.0f, 0.0f, 0.0f},
+			{0.0f, 50.0f, 0.0f},
 		};
 
-		//draw single triangle
-		rasterizer::draw(color_buffer, rasterizer::draw_command {
-				.mesh = {
-					.positions = vertices,
-					.vertex_count = 3,
-					.color = {1.0f, 0.0f, 0.0f, 1.0f},
-				}
-			}
-		);
-
+		for(int i = 0; i < 100; ++i)
+			draw(color_buffer, rasterizer::draw_command {
+					.mesh = {
+						.positions = positions,
+						.vertex_count = 3,
+						.color = {(i % 3) == 0, (i % 3) == 1, (i % 3) == 2},
+					},
+					.transform = {
+						1.0f, 0.0f, 0.0f, mouse_x + 50.0f * (i % 10),
+						0.0f, 1.0f, 0.0f, mouse_y + 50.0f * (i / 10),
+						0.0f, 0.0f, 1.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 1.0f,
+					},
+			});
 
 		SDL_Rect rect {.x = 0, .y = 0, .w = width, .h = height};
 		SDL_BlitSurface(draw_surface, &rect, SDL_GetWindowSurface(window), &rect);
