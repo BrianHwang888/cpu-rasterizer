@@ -14,14 +14,28 @@ namespace rasterizer {
 	//fills color buffer with given color in given draw_command
 	void draw(const image_view& color_buffer, const draw_command& command) {
 		for(std::uint32_t vertex_index = 0; vertex_index + 2 < command.mesh.vertex_count; vertex_index += 3) {
-			auto v0 = as_point(command.mesh.positions[vertex_index]);
-			auto v1 = as_point(command.mesh.positions[vertex_index + 1]);
-			auto v2 = as_point(command.mesh.positions[vertex_index + 2]);
+			auto v0 = command.transform * as_point(command.mesh.positions[vertex_index]);
+			auto v1 = command.transform * as_point(command.mesh.positions[vertex_index + 1]);
+			auto v2 = command.transform * as_point(command.mesh.positions[vertex_index + 2]);
 			
 			float det012 = det2D(v1 - v0, v2 - v0);
 			
 			//check if counter clockwise on screen
 			bool const ccw = det012 < 0.0f;
+
+			//cull overlapping triangles using back-face culling
+			switch (command.cull_mode) {
+				case cull_mode::none:
+					break;
+				case cull_mode::cw:
+					if(!ccw)
+						continue;
+					break;
+				case cull_mode::ccw:
+					if(ccw)
+						continue;
+					break;
+			}
 
 			if(ccw) {
 				std::swap(v1, v2);
