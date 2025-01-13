@@ -82,13 +82,19 @@ int main() {
 			{50.0f, 0.0f, 0.0f},
 			{0.0f, 50.0f, 0.0f},
 		};
+		
+		rasterizer::vector4f colors[] = {
+			{1.0f, 0.0f, 0.0f, 1.0f},
+			{0.0f, 1.0f, 0.0f, 1.0f},
+			{0.0f, 0.0f, 1.0f, 1.0f},
+		};
 
 		for(int i = 0; i < 100; ++i)
 			draw(color_buffer, rasterizer::draw_command {
 					.mesh = {
 						.positions = positions,
 						.vertex_count = 3,
-						.color = {(i % 3) == 0, (i % 3) == 1, (i % 3) == 2},
+						.color = {colors},
 					},
 					.transform = {
 						1.0f, 0.0f, 0.0f, mouse_x + 50.0f * (i % 10),
