@@ -59,6 +59,10 @@ namespace rasterizer {
 		return {v0.x - v1.x, v0.y - v1.y, v0.z - v1.z, v0.w - v1.w};
 	}
 
+	inline vector4f operator + (const vector4f& v0, const vector4f& v1) {
+		return {v0.x + v1.x, v0.y + v1.y, v0.z + v1.z, v0.w + v1.w};
+	}
+
 	inline vector4f operator * (const matrix4x4f& m, const vector4f& v) {
 		vector4f result {0.0f, 0.0f, 0.0f, 0.0f};
 
@@ -68,6 +72,10 @@ namespace rasterizer {
 		result.w = m.values[12] * v.x + m.values[13] * v.y + m.values[14] * v.z + m.values[15] * v.w;
 
 		return result;
+	}
+
+	inline vector4f operator * (const float f, const vector4f& v) {
+		return {f * v.x, f * v.y, f * v.z, f * v.w};
 	}
 
 	inline float det2D(const vector4f& v0, const vector4f& v1) {

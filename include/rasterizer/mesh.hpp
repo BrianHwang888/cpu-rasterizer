@@ -1,11 +1,12 @@
 #pragma once
 
+#include "rasterizer/attribute.hpp"
 #include "rasterizer/types.hpp"
 
 namespace rasterizer {
 	struct mesh {
-		vector3f const* positions = nullptr;
+		attribute<vector3f> positions = {};
 		std::uint32_t vertex_count = 0;
-		vector4f color = {1.0f, 1.0f, 1.0f, 1.0f};
+		attribute<vector4f> color = {};
 	};
 }

@@ -17,7 +17,11 @@ namespace rasterizer {
 			auto v0 = command.transform * as_point(command.mesh.positions[vertex_index]);
 			auto v1 = command.transform * as_point(command.mesh.positions[vertex_index + 1]);
 			auto v2 = command.transform * as_point(command.mesh.positions[vertex_index + 2]);
-			
+
+			auto c0 = command.mesh.color[vertex_index + 0];
+			auto c1 = command.mesh.color[vertex_index + 1];
+			auto c2 = command.mesh.color[vertex_index + 2];
+
 			float det012 = det2D(v1 - v0, v2 - v0);
 			
 			//check if counter clockwise on screen
@@ -60,8 +64,15 @@ namespace rasterizer {
 					float det12p = det2D(v2 - v1, p - v1);
 					float det20p = det2D(v0 - v2, p - v2);
 
-					if(det01p >= 0.0f && det12p >= 0.0f && det20p >= 0.0f)
-						color_buffer.at(x, y) = to_color4ub(command.mesh.color);
+					if(det01p >= 0.0f && det12p >= 0.0f && det20p >= 0.0f) {
+
+						//interpolate color using Barycentric coordinates
+						float l0 = det12p / det012;
+						float l1 = det20p / det012;
+						float l2 = det01p / det012;
+
+						color_buffer.at(x, y) = to_color4ub(l0 * c0 + l1 * c1 + l2 * c2);
+					}
 				}
 			}
 		}
