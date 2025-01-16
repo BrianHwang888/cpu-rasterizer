@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cmath>
 #include "rasterizer/renderer.hpp"
+#include "rasterizer/viewport.hpp"
 
 namespace rasterizer {
 
@@ -12,11 +13,15 @@ namespace rasterizer {
 	}
 
 	//fills color buffer with given color in given draw_command
-	void draw(const image_view& color_buffer, const draw_command& command) {
+	void draw(const image_view& color_buffer, const viewport& viewport, const draw_command& command) {
 		for(std::uint32_t vertex_index = 0; vertex_index + 2 < command.mesh.vertex_count; vertex_index += 3) {
 			auto v0 = command.transform * as_point(command.mesh.positions[vertex_index]);
 			auto v1 = command.transform * as_point(command.mesh.positions[vertex_index + 1]);
 			auto v2 = command.transform * as_point(command.mesh.positions[vertex_index + 2]);
+
+			v0 = apply(viewport, v0);
+			v1 = apply(viewport, v1);
+			v2 = apply(viewport, v2);
 
 			auto c0 = command.mesh.color[vertex_index + 0];
 			auto c1 = command.mesh.color[vertex_index + 1];
@@ -46,15 +51,16 @@ namespace rasterizer {
 				det012 = -det012;
 			}
 
-			std::int32_t x_min = std::min({std::floor(v0.x), std::floor(v1.x), std::floor(v2.x)});
-			std::int32_t x_max = std::max({std::floor(v0.x), std::floor(v1.x), std::floor(v2.x)});
-			std::int32_t y_min = std::min({std::floor(v0.y), std::floor(v1.y), std::floor(v2.y)});
-			std::int32_t y_max = std::max({std::floor(v0.y), std::floor(v1.y), std::floor(v2.y)});
 
-			x_min = std::max<std::int32_t>(0, x_min);
-			x_max = std::min<std::int32_t>(color_buffer.width - 1, x_max);
-			y_min = std::max<std::int32_t>(0, y_min);
-			y_max = std::min<std::int32_t>(color_buffer.height - 1, y_max);
+			std::int32_t x_min = std::max<std::int32_t>(viewport.x_min, 0);
+			std::int32_t x_max = std::min<std::int32_t>(viewport.x_max, color_buffer.width) - 1;
+			std::int32_t y_min = std::max<std::int32_t>(viewport.y_min, 0);
+			std::int32_t y_max = std::min<std::int32_t>(viewport.y_max, color_buffer.height) - 1;
+
+			x_min = std::max<float>(std::min({std::floor(v0.x), std::floor(v1.x), std::floor(v2.x)}), x_min);
+			x_max = std::min<float>(std::max({std::floor(v0.x), std::floor(v1.x), std::floor(v2.x)}), x_max);
+			y_min = std::max<float>(std::min({std::floor(v0.y), std::floor(v1.y), std::floor(v2.y)}), y_min);
+			y_max = std::min<float>(std::max({std::floor(v0.y), std::floor(v1.y), std::floor(v2.y)}), y_max);
 
 			for(std::int32_t y = y_min; y <= y_max; ++y) {
 				for(std::int32_t x = x_min; x <= x_max; ++x) {
