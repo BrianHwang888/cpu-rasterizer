@@ -1,7 +1,9 @@
 #include <chrono>
 #include <iostream>
 #include <SDL2/SDL.h>
+
 #include "rasterizer/renderer.hpp"
+#include "rasterizer/viewport.hpp"
 
 int main() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -75,12 +77,19 @@ int main() {
 			.height = (std::uint32_t)height,
 		};
 
+		rasterizer::viewport viewport {
+			.x_min = 0,
+			.y_min = 0,
+			.x_max = (std::int32_t)color_buffer.width,
+			.y_max = (std::int32_t)color_buffer.height,
+		}; 
+
 		rasterizer::clear(color_buffer, {0.8f, 0.9f, 1.0f, 1.0f});
 
 		rasterizer::vector3f positions[] = {
-			{0.0f, 0.0f, 0.0f},
-			{50.0f, 0.0f, 0.0f},
-			{0.0f, 50.0f, 0.0f},
+			{0.0f, 0.5f, 0.0f},
+			{-0.5f, -0.5f, 0.0f},
+			{0.5f, -0.5f, 0.0f},
 		};
 		
 		rasterizer::vector4f colors[] = {
@@ -90,17 +99,11 @@ int main() {
 		};
 
 		for(int i = 0; i < 100; ++i)
-			draw(color_buffer, rasterizer::draw_command {
+			draw(color_buffer, viewport, rasterizer::draw_command {
 					.mesh = {
 						.positions = positions,
 						.vertex_count = 3,
 						.color = {colors},
-					},
-					.transform = {
-						1.0f, 0.0f, 0.0f, mouse_x + 50.0f * (i % 10),
-						0.0f, 1.0f, 0.0f, mouse_y + 50.0f * (i / 10),
-						0.0f, 0.0f, 1.0f, 0.0f,
-						0.0f, 0.0f, 0.0f, 1.0f,
 					},
 			});
 
