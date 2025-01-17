@@ -86,24 +86,32 @@ int main() {
 
 		rasterizer::clear(color_buffer, {0.8f, 0.9f, 1.0f, 1.0f});
 
-		rasterizer::vector3f positions[] = {
-			{0.0f, 0.5f, 0.0f},
+		rasterizer::vector3f positions[] {
 			{-0.5f, -0.5f, 0.0f},
+			{-0.5f, 0.5f, 0.0f},
 			{0.5f, -0.5f, 0.0f},
+			{0.5f, 0.5f, 0.0f},
 		};
 		
-		rasterizer::vector4f colors[] = {
+		rasterizer::vector4f colors[] {
 			{1.0f, 0.0f, 0.0f, 1.0f},
 			{0.0f, 1.0f, 0.0f, 1.0f},
 			{0.0f, 0.0f, 1.0f, 1.0f},
+			{1.0f, 1.0f, 1.0f, 1.0f},
+		};
+
+		std::uint32_t indices[] {
+			0, 1, 2,
+			2, 1, 3,
 		};
 
 		for(int i = 0; i < 100; ++i)
 			draw(color_buffer, viewport, rasterizer::draw_command {
 					.mesh = {
 						.positions = positions,
-						.vertex_count = 3,
 						.color = {colors},
+						.indices = indices,
+						.count = 6,
 					},
 			});
 

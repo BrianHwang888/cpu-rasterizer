@@ -6,7 +6,8 @@
 namespace rasterizer {
 	struct mesh {
 		attribute<vector3f> positions = {};
-		std::uint32_t vertex_count = 0;
 		attribute<vector4f> color = {};
+		const std::uint32_t* indices = nullptr;
+		std::uint32_t count = 0;
 	};
 }
