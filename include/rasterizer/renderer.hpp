@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rasterizer/types.hpp"
+#include "rasterizer/color.hpp"
 #include "rasterizer/image_view.hpp"
 #include "rasterizer/draw_command.hpp"
 #include "rasterizer/viewport.hpp"

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "rasterizer/attribute.hpp"
-#include "rasterizer/types.hpp"
+#include "rasterizer/vector.hpp"
 
 namespace rasterizer {
 	struct mesh {

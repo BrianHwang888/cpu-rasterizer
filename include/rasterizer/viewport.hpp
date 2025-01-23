@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include "rasterizer/types.hpp"
+#include "rasterizer/vector.hpp"
 
 namespace rasterizer {
 

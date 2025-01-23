@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <cmath>
+
 #include "rasterizer/renderer.hpp"
-#include "rasterizer/viewport.hpp"
 
 namespace rasterizer {
 
