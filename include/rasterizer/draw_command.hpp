@@ -1,7 +1,8 @@
 #pragma once
 
+#include "rasterizer/matrix.hpp"
 #include "rasterizer/mesh.hpp"
-#include "settings.hpp"
+#include "rasterizer/settings.hpp"
 
 namespace rasterizer {
 	struct draw_command {

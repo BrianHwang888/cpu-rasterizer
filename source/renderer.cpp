@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <cmath>
+
 #include "rasterizer/renderer.hpp"
-#include "rasterizer/viewport.hpp"
 
 namespace rasterizer {
 
@@ -14,18 +14,28 @@ namespace rasterizer {
 
 	//fills color buffer with given color in given draw_command
 	void draw(const image_view& color_buffer, const viewport& viewport, const draw_command& command) {
-		for(std::uint32_t vertex_index = 0; vertex_index + 2 < command.mesh.vertex_count; vertex_index += 3) {
-			auto v0 = command.transform * as_point(command.mesh.positions[vertex_index]);
-			auto v1 = command.transform * as_point(command.mesh.positions[vertex_index + 1]);
-			auto v2 = command.transform * as_point(command.mesh.positions[vertex_index + 2]);
+		for(std::uint32_t vertex_index = 0; vertex_index + 2 < command.mesh.count; vertex_index += 3) {
+			std::uint32_t i0 = vertex_index;
+			std::uint32_t i1 = vertex_index + 1;
+			std::uint32_t i2 = vertex_index + 2;
+
+			if(command.mesh.indices) {
+				i0 = command.mesh.indices[i0];
+				i1 = command.mesh.indices[i1];
+				i2 = command.mesh.indices[i2];
+			}
+
+			auto v0 = command.transform * as_point(command.mesh.positions[i0]);
+			auto v1 = command.transform * as_point(command.mesh.positions[i1]);
+			auto v2 = command.transform * as_point(command.mesh.positions[i2]);
 
 			v0 = apply(viewport, v0);
 			v1 = apply(viewport, v1);
 			v2 = apply(viewport, v2);
 
-			auto c0 = command.mesh.color[vertex_index + 0];
-			auto c1 = command.mesh.color[vertex_index + 1];
-			auto c2 = command.mesh.color[vertex_index + 2];
+			auto c0 = command.mesh.color[i0];
+			auto c1 = command.mesh.color[i1];
+			auto c2 = command.mesh.color[i2];
 
 			float det012 = det2D(v1 - v0, v2 - v0);
 			

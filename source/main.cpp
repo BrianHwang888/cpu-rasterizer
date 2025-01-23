@@ -9,8 +9,8 @@ int main() {
 	SDL_Init(SDL_INIT_VIDEO);
 
 	//window setup
-	int width = 1000;
-	int height = 800;
+	int width = 800;
+	int height = 600;
 
 	SDL_Surface* draw_surface = nullptr;
 	SDL_Window* window = SDL_CreateWindow("Tiny Rasterizer",
@@ -23,6 +23,8 @@ int main() {
 	int mouse_y = 0;
 	
 	auto last_frame_start = std::chrono::high_resolution_clock::now();
+
+	float time = 0.0f;
 
 	//draw loop
 	bool running = true;
@@ -70,6 +72,8 @@ int main() {
 
 		std::cout << dt << std::endl;
 
+		time += dt;
+
 		//setur color buffer
 		rasterizer::image_view color_buffer {
 			.pixels = (rasterizer::color4ub*)draw_surface->pixels,
@@ -86,26 +90,38 @@ int main() {
 
 		rasterizer::clear(color_buffer, {0.8f, 0.9f, 1.0f, 1.0f});
 
-		rasterizer::vector3f positions[] = {
-			{0.0f, 0.5f, 0.0f},
+		rasterizer::vector3f positions[] {
 			{-0.5f, -0.5f, 0.0f},
+			{-0.5f, 0.5f, 0.0f},
 			{0.5f, -0.5f, 0.0f},
+			{0.5f, 0.5f, 0.0f},
 		};
 		
-		rasterizer::vector4f colors[] = {
+		rasterizer::vector4f colors[] {
 			{1.0f, 0.0f, 0.0f, 1.0f},
 			{0.0f, 1.0f, 0.0f, 1.0f},
 			{0.0f, 0.0f, 1.0f, 1.0f},
+			{1.0f, 1.0f, 1.0f, 1.0f},
 		};
 
-		for(int i = 0; i < 100; ++i)
+		std::uint32_t indices[] {
+			0, 1, 2,
+			2, 1, 3,
+		};
+
+		for(int i = 0; i < 100; ++i) {
+			rasterizer::matrix4x4f transform = rasterizer::matrix4x4f::rotateZX(time);
+
 			draw(color_buffer, viewport, rasterizer::draw_command {
 					.mesh = {
 						.positions = positions,
-						.vertex_count = 3,
 						.color = {colors},
+						.indices = indices,
+						.count = 6,
 					},
+					.transform = transform,
 			});
+		}
 
 		SDL_Rect rect {.x = 0, .y = 0, .w = width, .h = height};
 		SDL_BlitSurface(draw_surface, &rect, SDL_GetWindowSurface(window), &rect);
