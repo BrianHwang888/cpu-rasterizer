@@ -33,9 +33,9 @@ namespace rasterizer {
 			v1 = apply(viewport, v1);
 			v2 = apply(viewport, v2);
 
-			auto c0 = command.mesh.color[i0];
-			auto c1 = command.mesh.color[i1];
-			auto c2 = command.mesh.color[i2];
+			auto c0 = command.mesh.colors[i0];
+			auto c1 = command.mesh.colors[i1];
+			auto c2 = command.mesh.colors[i2];
 
 			float det012 = det2D(v1 - v0, v2 - v0);
 			

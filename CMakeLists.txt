@@ -21,3 +21,4 @@ target_include_directories(tiny-rasterizer PUBLIC
 target_link_libraries(tiny-rasterizer PUBLIC
     ${SDL2_LIBRARIES}
 )
+target_compile_definitions(tiny-rasterizer PUBLIC -DPROJECT_ROOT="${CMAKE_CURRENT_SOURCE_DIR}")
