@@ -110,7 +110,11 @@ int main() {
 			2, 1, 3,
 		};
 
-		rasterizer::matrix4x4f transform = rasterizer::matrix4x4f::scale({height * 1.0f / width, 1.0f, 1.0f}) * rasterizer::matrix4x4f::scale(0.5f) * rasterizer::matrix4x4f::rotateZX(time) * rasterizer::matrix4x4f::rotateXY(time * 1.61f);
+		rasterizer::matrix4x4f transform = 
+			rasterizer::matrix4x4f::perspective(0.01f, 10.0f, M_PI / 3.0f, width * 1.0f / height)
+			* rasterizer::matrix4x4f::translate({0.0f, 0.0f, -5.0f})
+			* rasterizer::matrix4x4f::rotateZX(time)
+			* rasterizer::matrix4x4f::rotateXY(time * 1.61f);
 
 		draw(color_buffer, viewport, rasterizer::draw_command {
 				.mesh = rasterizer::cube,

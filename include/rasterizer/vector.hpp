@@ -34,4 +34,11 @@ namespace rasterizer {
 	inline float det2D(const vector4f& v0, const vector4f& v1) {
 		return v0.x * v1.y - v0.y * v1.x;
 	}
+
+	inline vector4f perspective_divide(vector4f v) {
+		v.x /= v.w;
+		v.y /= v.w;
+		v.z /= v.w;
+		return v;
+	}
 }

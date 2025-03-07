@@ -29,6 +29,10 @@ namespace rasterizer {
 			auto v1 = command.transform * as_point(command.mesh.positions[i1]);
 			auto v2 = command.transform * as_point(command.mesh.positions[i2]);
 
+			v0 = perspective_divide(v0);
+			v1 = perspective_divide(v1);
+			v2 = perspective_divide(v2);
+
 			v0 = apply(viewport, v0);
 			v1 = apply(viewport, v1);
 			v2 = apply(viewport, v2);
