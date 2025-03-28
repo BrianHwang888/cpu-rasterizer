@@ -36,9 +36,14 @@ namespace rasterizer {
 	}
 
 	inline vector4f perspective_divide(vector4f v) {
-		v.x /= v.w;
-		v.y /= v.w;
-		v.z /= v.w;
+		v.w = 1.0f / v.w;
+		v.x *= v.w;
+		v.y *= v.w;
+		v.z *= v.w;
 		return v;
+	}
+
+	inline float dot(const vector4f& v0, const vector4f& v1) {
+		return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z + v0.w * v1.w;
 	}
 }
