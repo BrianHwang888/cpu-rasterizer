@@ -92,16 +92,16 @@ int main() {
 		rasterizer::clear(color_buffer, {0.8f, 0.9f, 1.0f, 1.0f});
 
 		rasterizer::vector3f positions[] {
-			{-0.5f, -0.5f, 0.0f},
-			{-0.5f, 0.5f, 0.0f},
-			{0.5f, -0.5f, 0.0f},
-			{0.5f, 0.5f, 0.0f},
+			{-1.0f, -1.0f, 0.0f},
+			{1.0f, -1.0f, 0.0f},
+			{-1.0f, 1.0f, 0.0f},
+			{1.0f, 1.0f, 0.0f},
 		};
 		
 		rasterizer::vector4f colors[] {
+			{0.0f, 0.0f, 0.0f, 1.0f},
 			{1.0f, 0.0f, 0.0f, 1.0f},
 			{0.0f, 1.0f, 0.0f, 1.0f},
-			{0.0f, 0.0f, 1.0f, 1.0f},
 			{1.0f, 1.0f, 1.0f, 1.0f},
 		};
 
@@ -111,16 +111,13 @@ int main() {
 		};
 
 		
-		rasterizer::matrix4x4f model = rasterizer::matrix4x4f::translate({0.f, 0.f, -4.f})
-		    * rasterizer::matrix4x4f::rotateZX(time)
-		    * rasterizer::matrix4x4f::rotateXY(time * 1.61f);
+		rasterizer::matrix4x4f model = rasterizer::matrix4x4f::translate({0.f, 0.f, -2.0f});
 
-		rasterizer::matrix4x4f projection = rasterizer::matrix4x4f::perspective(4.f, 10.f, M_PI / 3.f, width * 1.f / height);
+		rasterizer::matrix4x4f projection = rasterizer::matrix4x4f::perspective(0.01f, 10.0f, M_PI / 3.0f, width * 1.f / height);
 
 		draw(color_buffer, viewport,
 		    rasterizer::draw_command{
-		        .mesh = rasterizer::cube,
-		        .cull_mode = rasterizer::cull_mode::ccw,
+		        .mesh = {.positions = {positions}, .colors = {colors}, .indices = {indices}, .count = 6,},
 		        .transform = projection * model,
 		    }
 		);

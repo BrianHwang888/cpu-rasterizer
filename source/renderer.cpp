@@ -228,7 +228,12 @@ namespace rasterizer {
 							float l2 = det01p / det012;
 
 
-							color_buffer.at(x, y) = to_color4ub(l0 * v0.color + l1 * v1.color + l2 * v2.color);
+							//color_buffer.at(x, y) = to_color4ub(l0 * v0.color + l1 * v1.color + l2 * v2.color);
+							auto color = l0 * v0.color + l1 * v1.color + l2 * v2.color;
+							if(int(std::floor(color.x * 8) + std::floor(color.y * 8)) % 2 == 0)
+								color_buffer.at(x, y) = {0, 0, 0, 255};
+							else
+								color_buffer.at(x, y) = {255, 255, 255, 255};
 						}
 					}
 				}
